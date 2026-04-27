@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Attendance | admin</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .att-controls {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+    }
+    .meal-select-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .meal-chip {
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--br-pill);
+      border: 1px solid var(--border-light);
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: var(--font-sans);
+    }
+    .meal-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(232,93,4,0.3);
+    }
+    .meal-chip:hover:not(.active) {
+      border-color: var(--text-muted);
+      color: var(--text-main);
+    }
+
+    .att-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .att-table thead th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      background: var(--bg-surface-elevated);
+      z-index: 5;
+    }
+    .att-table tbody tr {
+      transition: background var(--transition-fast);
+    }
+    .att-table tbody tr:hover {
+      background: rgba(255,255,255,0.03);
+    }
+    .att-table tbody tr.absent-row {
+      background: rgba(208, 0, 0, 0.06);
+    }
+    .att-table tbody td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+    .att-table tbody td:last-child {
+      text-align: center;
+    }
+
+    .att-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #fff;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* Custom checkbox */
+    .att-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border-light);
+      border-radius: 5px;
+      background: var(--bg-surface);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+    .att-check:checked {
+      background: var(--secondary);
+      border-color: var(--secondary);
+    }
+    .att-check:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .att-check:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(232,93,4,0.15);
+    }
+
+    .select-all-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--bg-surface);
+      border-radius: var(--br-sm);
+      margin-bottom: 0.75rem;
+      border: 1px solid var(--border-light);
+    }
+
+    .submit-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-md);
+      padding: var(--space-sm) 0;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .counter-badge {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-light);
+      padding: 0.4rem 1rem;
+      border-radius: var(--br-pill);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .counter-badge strong {
+      color: var(--secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-md">
+        <a href="admin-dashboard.html" class="brand">
+          <span class="brand-dot" style="background-color: var(--secondary);"></span>
+          admin
+        </a>
+        <ul class="nav-links" style="margin-left: var(--space-lg);">
+          <li><a href="admin-dashboard.html">Dashboard</a></li>
+          <li><a href="admin-students.html">Students</a></li>
+          <li><a href="admin-menu.html">Menu</a></li>
+          <li><a href="admin-inventory.html">Inventory</a></li>
+          <li><a href="admin-extras.html">Extra Charges</a></li>
+        </ul>
+      </div>
+      <div class="user-profile">
+        <div class="avatar" onclick="toggleProfileDropdown(event)" style="cursor:pointer; background: linear-gradient(135deg, var(--bg-surface-elevated), var(--text-muted)); color: #fff;">MG</div>
+        <div class="dropdown-menu" id="profile-dropdown">
+          <a href="#" class="dropdown-item" id="dropdown-name" style="font-weight:600; border-bottom: 1px solid rgba(255,255,255,0.08); pointer-events:none;">Admin</a>
+          <a href="index.html" class="dropdown-item" onclick="doLogout(event)" style="color: #ff6b6b;">&#x2192; Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="dash-header reveal delay-1" style="margin-top: var(--space-lg);">
+      <h1 class="font-serif">Mark Attendance</h1>
+      <p class="text-muted">Select date and meal, then mark students who are present.</p>
+    </div>
+
+    <div class="glass-panel reveal delay-2" style="margin-bottom: var(--space-lg);">
+
+      <!-- Controls: Date & Meal -->
+      <div class="att-controls">
+        <div class="input-group" style="margin-bottom:0;">
+          <label>Date</label>
+          <input type="date" class="input-field" id="att-date" style="padding: 0.6rem 1rem;">
+        </div>
+        <div class="input-group" style="margin-bottom:0;">
+          <label>Meal</label>
+          <div class="meal-select-group">
+            <button class="meal-chip active" data-meal="breakfast" onclick="selectMeal(this)">☀ Breakfast</button>
+            <button class="meal-chip" data-meal="lunch" onclick="selectMeal(this)">🍛 Lunch</button>
+            <button class="meal-chip" data-meal="dinner" onclick="selectMeal(this)">🌙 Dinner</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Select All / Count bar -->
+      <div class="select-all-bar">
+        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.88rem; font-weight: 500;">
+          <input type="checkbox" class="att-check" id="select-all" onchange="toggleAll(this.checked)">
+          Select All Students
+        </label>
+        <div class="counter-badge">
+          Present: <strong id="present-count">0</strong> / <span id="total-count">0</span>
+        </div>
+      </div>
+
+      <!-- Student Table -->
+      <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+        <table class="att-table" id="att-student-table">
+          <thead>
+            <tr>
+              <th style="width:50px;">Sl No</th>
+              <th>Student ID</th>
+              <th>Student Name</th>
+              <th>Room</th>
+              <th style="width:80px; text-align:center;">Present</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding:2rem;">Loading students...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-bar">
+        <p class="text-muted" style="font-size:0.85rem;">⚠ Unmarked students will be recorded as absent.</p>
+        <button class="btn btn-primary" id="submit-att-btn" onclick="submitAttendance()" style="padding: 0.75rem 2.5rem;">
+          Save Attendance
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    let studentsData = [];
+    let selectedMeal = 'breakfast';
+
+    // Set default date
+    document.getElementById('att-date').value = new Date().toISOString().split('T')[0];
+
+    function selectMeal(btn) {
+      document.querySelectorAll('.meal-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMeal = btn.dataset.meal;
+      // Reload existing attendance for this date+meal
+      loadExistingAttendance();
+    }
+
+    function toggleAll(checked) {
+      document.querySelectorAll('.student-check').forEach(cb => {
+        cb.checked = checked;
+        cb.closest('tr').classList.toggle('absent-row', !checked);
+      });
+      updateCounter();
+    }
+
+    function updateCounter() {
+      const total = document.querySelectorAll('.student-check').length;
+      const present = document.querySelectorAll('.student-check:checked').length;
+      document.getElementById('present-count').textContent = present;
+      document.getElementById('total-count').textContent = total;
+    }
+
+    // Load students into table
+    function loadStudents() {
+      fetch('api/students').then(r => r.json()).then(students => {
+        studentsData = students;
+        const tbody = document.querySelector('#att-student-table tbody');
+        tbody.innerHTML = '';
+        if (students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No students registered.</td></tr>';
+          return;
+        }
+        students.forEach((s, idx) => {
+          const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="color:var(--text-muted);">${idx + 1}</td>
+            <td style="font-weight:500;">${s.studentId}</td>
+            <td>
+              <span class="att-avatar">${initials}</span>
+              ${s.name.toUpperCase()}
+            </td>
+            <td style="color:var(--text-muted);">${s.roomNo}</td>
+            <td style="text-align:center;">
+              <input type="checkbox" class="att-check student-check" data-sid="${s.studentId}" checked onchange="onCheckChange(this)">
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        updateCounter();
+        loadExistingAttendance();
+      }).catch(() => {
+        document.querySelector('#att-student-table tbody').innerHTML =
+          '<tr><td colspan="5" style="text-align:center; color:var(--danger); padding:2rem;">Failed to load students. Is server running?</td></tr>';
+      });
+    }
+
+    function onCheckChange(cb) {
+      cb.closest('tr').classList.toggle('absent-row', !cb.checked);
+      // Update select-all state
+      const allChecks = document.querySelectorAll('.student-check');
+      const allChecked = Array.from(allChecks).every(c => c.checked);
+      document.getElementById('select-all').checked = allChecked;
+      updateCounter();
+    }
+
+    // Load existing attendance for selected date so checkboxes reflect saved state
+    function loadExistingAttendance() {
+      const date = document.getElementById('att-date').value;
+      if (!date || studentsData.length === 0) return;
+
+      // For each student, fetch their attendance for this date
+      // We'll use a trick: fetch all students' attendance
+      const checks = document.querySelectorAll('.student-check');
+      let loaded = 0;
+      checks.forEach(cb => {
+        const sid = cb.dataset.sid;
+        fetch(`api/attendance?studentId=${encodeURIComponent(sid)}`)
+          .then(r => r.json())
+          .then(records => {
+            const rec = records.find(r => (r.attendanceDate || '').startsWith(date));
+            if (rec) {
+              cb.checked = rec[selectedMeal] === 1;
+            } else {
+              cb.checked = true; // Default to present if no record exists
+            }
+            cb.closest('tr').classList.toggle('absent-row', !cb.checked);
+            loaded++;
+            if (loaded === checks.length) updateCounter();
+          })
+          .catch(() => { loaded++; });
+      });
+    }
+
+    // Submit attendance for all students
+    async function submitAttendance() {
+      const date = document.getElementById('att-date').value;
+      if (!date) { showToast('Please select a date!', 'error'); return; }
+
+      const btn = document.getElementById('submit-att-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      const checks = document.querySelectorAll('.student-check');
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const cb of checks) {
+        const sid = cb.dataset.sid;
+        const present = cb.checked ? 1 : 0;
+
+        const params = new URLSearchParams();
+        params.append('studentId', sid);
+        params.append('attendanceDate', date);
+
+        // Set the selected meal, keep others at present by default
+        if (selectedMeal === 'breakfast') {
+          params.append('breakfast', present.toString());
+          params.append('lunch', present.toString());
+          params.append('dinner', present.toString());
+        } else if (selectedMeal === 'lunch') {
+          params.append('breakfast', present.toString());
+          params.append('lunch', present.toString());
+          params.append('dinner', present.toString());
+        } else {
+          params.append('breakfast', present.toString());
+          params.append('lunch', present.toString());
+          params.append('dinner', present.toString());
+        }
+
+        try {
+          const r = await fetch('api/attendance', { method: 'POST', body: params });
+          const d = await r.json();
+          if (d.status === 'success') successCount++;
+          else failCount++;
+        } catch (e) {
+          failCount++;
+        }
+      }
+
+      btn.textContent = 'Save Attendance';
+      btn.disabled = false;
+
+      if (failCount === 0) {
+        showToast(`Attendance saved for ${successCount} students!`, 'success');
+      } else {
+        showToast(`Saved ${successCount}, failed ${failCount}`, 'error');
+      }
+    }
+
+    // Listen for date change
+    document.getElementById('att-date').addEventListener('change', () => {
+      loadExistingAttendance();
+    });
+
+    // Init
+    loadStudents();
+  </script>
+</body>
+</html>
