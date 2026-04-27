@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silicon FoodCourt | Hostel Mess Management</title>
+  <link rel="stylesheet" href="css/design-system.css?v=1">
+  <link rel="stylesheet" href="css/styles.css?v=1">
+</head>
+<body class="landing-page">
+  
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <a href="index.html" class="brand">
+        <span class="brand-dot"></span>
+        Silicon FoodCourt
+      </a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero-section">
+      <div class="hero-content reveal delay-1">
+        <h1 class="text-gradient">Elevating the <br>Hostel Dining <br>Experience.</h1>
+        <p>A seamless, transparent, and intelligent mess management system. Track your meals, manage your bills, and explore this week's culinary offerings with ease.</p>
+      </div>
+
+      <div class="auth-panel glass-panel reveal delay-2">
+        <div class="auth-tabs" id="authTabs">
+          <div class="auth-tab active" data-target="student-login">Student</div>
+          <div class="auth-tab" data-target="admin-login">Admin</div>
+        </div>
+
+        <!-- Student Login Form -->
+        <form id="student-login" class="auth-form" action="student-dashboard.html">
+          <div class="input-group">
+            <label for="student-id">Student ID</label>
+            <input type="text" id="student-id" class="input-field" placeholder="e.g. STU12345" required>
+          </div>
+          <div class="input-group">
+            <label for="student-pass">Password</label>
+            <input type="password" id="student-pass" class="input-field" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Enter Dining Portal</button>
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="register.html" class="text-muted" style="font-size: 0.85rem; text-decoration: none;">New resident? Register here.</a>
+          </div>
+        </form>
+
+        <!-- Admin Login Form (Hidden by default) -->
+        <form id="admin-login" class="auth-form" action="admin-dashboard.html" style="display: none;">
+          <div class="input-group">
+            <label for="admin-id">Admin Username</label>
+            <input type="text" id="admin-id" class="input-field" placeholder="admin" required>
+          </div>
+          <div class="input-group">
+            <label for="admin-pass">Password</label>
+            <input type="password" id="admin-pass" class="input-field" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Access Management</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
