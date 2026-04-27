@@ -1,0 +1,286 @@
+/* ==========================================================================
+   Component & Layout Styles
+   ========================================================================== */
+
+/* Navbar */
+.navbar {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-dark);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.nav-links a:hover, .nav-links a.active {
+  color: var(--primary);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--bg-dark);
+}
+
+/* Landing & Login */
+body.landing-page {
+  background: linear-gradient(rgba(10, 14, 20, 0.7), rgba(10, 14, 20, 0.9)), url('../img/sil1.png') center/cover no-repeat fixed;
+}
+
+body.landing-page .navbar {
+  background: transparent;
+  border-bottom: none;
+}
+
+.hero-section {
+  min-height: calc(100vh - 80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content h1 {
+  font-size: clamp(3rem, 5vw, 5rem);
+  margin-bottom: var(--space-md);
+}
+
+.hero-content p {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.auth-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--br-lg);
+  padding: var(--space-xl);
+  position: relative;
+  z-index: 10;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: var(--space-lg);
+}
+
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  border-bottom: 2px solid transparent;
+}
+
+.auth-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* Dashboard Specifics */
+.dash-header {
+  margin-bottom: var(--space-lg);
+}
+
+.dash-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Bento Cards Specific Adjustments */
+.bento-hero { grid-column: span 8; grid-row: span 2; }
+.bento-stat { grid-column: span 4; display: flex; flex-direction: column; justify-content: space-between; }
+.bento-menu { grid-column: span 12; }
+.bento-half { grid-column: span 6; }
+
+@media (max-width: 1024px) {
+  .bento-hero { grid-column: span 12; }
+  .bento-stat { grid-column: span 6; }
+  .bento-half { grid-column: span 12; }
+}
+
+@media (max-width: 768px) {
+  .hero-section { grid-template-columns: 1fr; text-align: center; }
+  .hero-content p { margin: 0 auto var(--space-lg); }
+  .bento-stat { grid-column: span 12; }
+}
+
+/* Big Typography in Cards */
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--text-main);
+  margin: var(--space-sm) 0;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Toggle Switch (Opt-out) */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--bg-surface-elevated);
+  transition: .4s;
+  border-radius: 34px;
+  border: 1px solid var(--border-light);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-muted);
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+  background-color: #fff;
+}
+
+/* Menu Items List */
+.menu-list {
+  list-style: none;
+  margin-top: var(--space-md);
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--border-light);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.meal-type {
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.food-items {
+  color: var(--text-main);
+  text-align: right;
+}
+
+/* Table styles for Reports */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-md);
+}
+
+.data-table th, .data-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.data-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.data-table tr:hover td {
+  background-color: rgba(255,255,255,0.02);
+}
+
+/* Tags/Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--br-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-success { background: rgba(56, 176, 0, 0.1); color: var(--success); border: 1px solid rgba(56,176,0,0.3); }
+.badge-danger { background: rgba(208, 0, 0, 0.1); color: var(--danger); border: 1px solid rgba(208,0,0,0.3); }
