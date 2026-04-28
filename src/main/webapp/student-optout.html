@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meal Opt-outs | Silicon FoodCourt</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-md">
+        <a href="student-dashboard.html" class="brand">
+          <span class="brand-dot"></span>
+          Silicon FoodCourt
+        </a>
+        <ul class="nav-links" style="margin-left: var(--space-lg);">
+          <li><a href="student-dashboard.html">Dashboard</a></li>
+          <li><a href="student-menu.html">Menu</a></li>
+          <li><a href="student-optout.html" class="active">Opt-Outs</a></li>
+          <li><a href="student-bill.html">My Bill</a></li>
+        </ul>
+      </div>
+            <div class="user-profile">
+        <div class="avatar" onclick="toggleProfileDropdown(event)" style="cursor:pointer;">--</div>
+        <div class="dropdown-menu" id="profile-dropdown">
+          <a href="#" class="dropdown-item" id="dropdown-name" style="font-weight:600; border-bottom: 1px solid rgba(255,255,255,0.08); pointer-events:none;"></a>
+          <a href="#" class="dropdown-item dropdown-room" style="font-size:0.75rem; pointer-events:none; padding-top:0.25rem; padding-bottom:0.75rem;"></a>
+          <a href="index.html" class="dropdown-item" onclick="doLogout(event)" style="color: #ff6b6b;">&#x2192; Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="dash-header reveal delay-1" style="margin-top: var(--space-lg);">
+      <h1 class="font-serif">Advance Opt-Outs</h1>
+      <p class="text-muted">Skip upcoming meals to save on your monthly bill.</p>
+    </div>
+
+    <div class="bento-grid">
+      
+      <!-- Opt Out Form -->
+      <div class="glass-panel bento-stat reveal delay-2">
+        <h3 class="font-serif" style="margin-bottom: var(--space-md);">Schedule Opt-Out</h3>
+        <form id="optout-form">
+          <div class="input-group">
+            <label>Date</label>
+            <input type="date" id="opt-date" class="input-field" required>
+          </div>
+          <div class="input-group">
+            <label>Meal Type</label>
+            <select id="opt-meal" class="input-field" required>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Full Day">Full Day</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Confirm Opt-Out</button>
+        </form>
+      </div>
+
+      <!-- Upcoming Opt-outs Table -->
+      <div class="glass-panel bento-hero reveal delay-3">
+        <h3 class="font-serif" style="margin-bottom: var(--space-md);">Your Scheduled Opt-Outs</h3>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="optouts-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Meal</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  
+  <script src="js/app.js"></script>
+</body>
+</html>
+
