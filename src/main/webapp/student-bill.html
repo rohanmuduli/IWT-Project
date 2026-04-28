@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bill | Silicon FoodCourt</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-md">
+        <a href="student-dashboard.html" class="brand">
+          <span class="brand-dot"></span>
+          Silicon FoodCourt
+        </a>
+        <ul class="nav-links" style="margin-left: var(--space-lg);">
+          <li><a href="student-dashboard.html">Dashboard</a></li>
+          <li><a href="student-menu.html">Menu</a></li>
+          <li><a href="student-optout.html">Opt-Outs</a></li>
+          <li><a href="student-bill.html" class="active">My Bill</a></li>
+        </ul>
+      </div>
+            <div class="user-profile">
+        <div class="avatar" onclick="toggleProfileDropdown(event)" style="cursor:pointer;">--</div>
+        <div class="dropdown-menu" id="profile-dropdown">
+          <a href="#" class="dropdown-item" id="dropdown-name" style="font-weight:600; border-bottom: 1px solid rgba(255,255,255,0.08); pointer-events:none;"></a>
+          <a href="#" class="dropdown-item dropdown-room" style="font-size:0.75rem; pointer-events:none; padding-top:0.25rem; padding-bottom:0.75rem;"></a>
+          <a href="index.html" class="dropdown-item" onclick="doLogout(event)" style="color: #ff6b6b;">&#x2192; Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="dash-header reveal delay-1" style="margin-top: var(--space-lg);">
+      <h1 class="font-serif">Billing Summary</h1>
+      <p class="text-muted">Detailed breakdown of your mess charges for October 2024.</p>
+    </div>
+
+    <div class="bento-grid">
+      
+      <!-- Bill Total -->
+      <div class="glass-panel bento-hero reveal delay-2" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <span class="stat-label">Total Amount Due</span>
+          <div class="stat-value text-primary" id="bill-page-total">₹...</div>
+          <p class="text-muted" style="margin-top: 0.5rem;" id="bill-page-due">Due by ...</p>
+        </div>
+        <div>
+          <button class="btn btn-primary">Pay Now</button>
+          <button class="btn btn-outline" style="margin-left: 0.5rem;">Download PDF</button>
+        </div>
+      </div>
+
+      <!-- Bill Breakdown -->
+      <div class="glass-panel bento-half reveal delay-3">
+        <h3 class="font-serif" style="margin-bottom: var(--space-md);">Breakdown</h3>
+        <ul class="menu-list">
+          <li class="menu-item">
+            <span class="text-muted" id="bill-page-base-label">Meals Attended Fee</span>
+            <span id="bill-page-base">₹...</span>
+          </li>
+          <li class="menu-item" style="border-bottom: 2px solid var(--border-light); padding-bottom: 1rem;">
+            <span class="text-muted">Extra Charges</span>
+            <span class="text-danger" id="bill-page-extras">+ ₹...</span>
+          </li>
+          <li class="menu-item" style="font-weight: 700; font-size: 1.25rem;">
+            <span>Total</span>
+            <span class="text-primary" id="bill-page-total-calc">₹...</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Extra Charges Detail -->
+      <div class="glass-panel bento-half reveal delay-4">
+        <h3 class="font-serif" style="margin-bottom: var(--space-md);">Extra Charges Detail</h3>
+        <p class="text-muted text-center" style="padding: 2rem;">No extra charges incurred this month.</p>
+      </div>
+
+    </div>
+  </main>
+
+  
+  <script src="js/app.js"></script>
+</body>
+</html>
+

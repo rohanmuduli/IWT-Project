@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu | Silicon FoodCourt</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-md">
+        <a href="student-dashboard.html" class="brand">
+          <span class="brand-dot"></span>
+          Silicon FoodCourt
+        </a>
+        <ul class="nav-links" style="margin-left: var(--space-lg);">
+          <li><a href="student-dashboard.html">Dashboard</a></li>
+          <li><a href="student-menu.html" class="active">Menu</a></li>
+          <li><a href="student-optout.html">Opt-Outs</a></li>
+          <li><a href="student-bill.html">My Bill</a></li>
+        </ul>
+      </div>
+            <div class="user-profile">
+        <div class="avatar" onclick="toggleProfileDropdown(event)" style="cursor:pointer;">--</div>
+        <div class="dropdown-menu" id="profile-dropdown">
+          <a href="#" class="dropdown-item" id="dropdown-name" style="font-weight:600; border-bottom: 1px solid rgba(255,255,255,0.08); pointer-events:none;"></a>
+          <a href="#" class="dropdown-item dropdown-room" style="font-size:0.75rem; pointer-events:none; padding-top:0.25rem; padding-bottom:0.75rem;"></a>
+          <a href="index.html" class="dropdown-item" onclick="doLogout(event)" style="color: #ff6b6b;">&#x2192; Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="dash-header reveal delay-1" style="margin-top: var(--space-lg);">
+      <h1 class="font-serif">Weekly Menu</h1>
+      <p class="text-muted">Explore this week's culinary offerings.</p>
+    </div>
+
+    <div class="bento-grid">
+      <!-- Menu view controlled by JS -->
+      <div class="glass-panel bento-hero reveal delay-2">
+        <div class="flex justify-between items-center" style="margin-bottom: var(--space-md);">
+          <h3 class="font-serif">Menu for <span id="display-date">Oct 24, 2024</span></h3>
+          <input type="date" id="menu-date-picker" class="input-field" style="padding: 0.5rem;">
+        </div>
+        
+        <ul class="menu-list" id="student-menu-list">
+          <li class="menu-item">
+            <span class="meal-type">Breakfast</span>
+            <span class="food-items" id="s-menu-breakfast">Loading...</span>
+          </li>
+          <li class="menu-item">
+            <span class="meal-type">Lunch</span>
+            <span class="food-items" id="s-menu-lunch">Loading...</span>
+          </li>
+          <li class="menu-item">
+            <span class="meal-type">Dinner</span>
+            <span class="food-items" id="s-menu-dinner">Loading...</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
+

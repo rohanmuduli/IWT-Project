@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | Silicon FoodCourt</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-md">
+        <a href="student-dashboard.html" class="brand">
+          <span class="brand-dot"></span>
+          Silicon FoodCourt
+        </a>
+        <ul class="nav-links" style="margin-left: var(--space-lg);">
+          <li><a href="student-dashboard.html" class="active">Dashboard</a></li>
+          <li><a href="student-menu.html">Menu</a></li>
+          <li><a href="student-optout.html">Opt-Outs</a></li>
+          <li><a href="student-bill.html">My Bill</a></li>
+        </ul>
+      </div>
+      <div class="user-profile">
+        <span class="text-muted user-room" style="font-weight: 500;">Room --</span>
+        <div class="avatar" onclick="toggleProfileDropdown(event)" style="cursor:pointer;">--</div>
+        <div class="dropdown-menu" id="profile-dropdown">
+          <a href="#" class="dropdown-item" id="dropdown-name" style="font-weight:600; border-bottom: 1px solid rgba(255,255,255,0.08); pointer-events:none;"></a>
+          <a href="#" class="dropdown-item dropdown-room" style="font-size:0.75rem; pointer-events:none; padding-top:0.25rem; padding-bottom:0.75rem;"></a>
+          <a href="index.html" class="dropdown-item" onclick="doLogout(event)" style="color: #ff6b6b;">&#x2192; Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="bento-grid">
+
+      <!-- Welcome & Current Meal -->
+      <div class="glass-panel bento-hero reveal delay-1">
+        <div class="dash-header">
+          <p class="text-muted" id="welcome-greeting"
+            style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Good Morning</p>
+          <h1 class="text-gradient" id="welcome-meal-prompt">Ready for Breakfast?</h1>
+        </div>
+        <div style="margin-top: var(--space-xl);">
+          <span class="badge badge-success" style="margin-bottom: 1rem;" id="welcome-meal-badge">Serving Now</span>
+          <h2 style="font-family: var(--font-sans); font-weight: 300; font-size: 2rem;" id="welcome-meal-items">Masala
+            Dosa, Sambar & Coconut Chutney</h2>
+          <p class="text-muted" style="margin-top: 0.5rem;" id="welcome-meal-time">Available until 09:30 AM</p>
+        </div>
+      </div>
+
+      <!-- Quick Opt-out Toggle -->
+      <div class="glass-panel bento-stat reveal delay-2">
+        <div>
+          <h3 class="font-serif">Meal Opt-out</h3>
+          <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;">Skip upcoming meals to save on your
+            monthly bill.</p>
+        </div>
+        <div class="flex justify-between items-center"
+          style="margin-top: var(--space-md); padding: 1rem; background: var(--bg-surface); border-radius: var(--br-sm);">
+          <span style="font-weight: 600;" id="quick-opt-label">Next Meal</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="opt-out-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Bill Overview -->
+      <div class="glass-panel bento-stat reveal delay-3">
+        <span class="stat-label">Current Month Bill</span>
+        <div class="stat-value text-primary">₹2,450</div>
+        <div class="flex justify-between text-muted"
+          style="font-size: 0.85rem; border-top: 1px solid var(--border-light); padding-top: 0.5rem;">
+          <span>Base: ₹3000</span>
+          <span>Deductions: -₹550</span>
+        </div>
+      </div>
+
+      <!-- Attendance History -->
+      <div class="glass-panel bento-stat reveal delay-4">
+        <span class="stat-label">Attendance (This Week)</span>
+        <div class="stat-value" id="att-week-count">--  <span
+            style="font-size: 1rem; color: var(--text-muted); font-family: var(--font-sans);">/ -- meals</span></div>
+        <a href="student-attendance.html" class="btn btn-outline" style="width: 100%; margin-top: auto; text-decoration: none; text-align:center;">View Full History</a>
+      </div>
+
+      <!-- Weekly Menu Preview -->
+      <div class="glass-panel bento-half reveal delay-5">
+        <div class="flex justify-between items-center">
+          <h3 class="font-serif">Today's Menu</h3>
+          <span class="text-muted" id="dash-menu-date">Oct 24, 2024</span>
+        </div>
+        <ul class="menu-list">
+          <li class="menu-item">
+            <span class="meal-type">Breakfast</span>
+            <span class="food-items" id="dash-menu-breakfast">Masala Dosa, Sambar, Chutney</span>
+          </li>
+          <li class="menu-item">
+            <span class="meal-type">Lunch</span>
+            <span class="food-items" id="dash-menu-lunch">Jeera Rice, Dal Tadka, Paneer Butter Masala, Roti</span>
+          </li>
+          <li class="menu-item">
+            <span class="meal-type">Dinner</span>
+            <span class="food-items" id="dash-menu-dinner">Veg Biryani, Raita, Gulab Jamun</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+
+</html>

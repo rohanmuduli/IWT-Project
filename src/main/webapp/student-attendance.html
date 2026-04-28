@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance History | Silicon FoodCourt</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .att-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      margin-top: var(--space-md);
+    }
+
+    .att-day-header {
+      text-align: center;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0.4rem 0;
+      font-weight: 600;
+    }
+
+    .att-day {
+      aspect-ratio: 1;
+      border-radius: var(--br-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid var(--border-light);
+      background: var(--bg-surface);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      cursor: default;
+      position: relative;
+    }
+
+    .att-day:hover {
+      transform: scale(1.08);
+      z-index: 2;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .att-day .day-num {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .att-day .meal-dots {
+      display: flex;
+      gap: 2px;
+      margin-top: 3px;
+    }
+
+    .meal-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .meal-dot.present { background: var(--secondary); }
+    .meal-dot.absent  { background: var(--danger); }
+
+    .att-day.all-present {
+      border-color: rgba(167, 201, 87, 0.4);
+      background: rgba(167, 201, 87, 0.08);
+    }
+
+    .att-day.partial {
+      border-color: rgba(244, 140, 6, 0.4);
+      background: rgba(244, 140, 6, 0.06);
+    }
+
+    .att-day.all-absent {
+      border-color: rgba(208, 0, 0, 0.35);
+      background: rgba(208, 0, 0, 0.06);
+    }
+
+    .att-day.future {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .att-day.empty {
+      background: transparent;
+      border-color: transparent;
+      pointer-events: none;
+    }
+
+    .att-day.today {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(232,93,4,0.3);
+    }
+
+    .legend {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-top: var(--space-sm);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .legend-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+    }
+
+    .att-table-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border-light);
+      padding: 0.75rem 1rem;
+      transition: background var(--transition-fast);
+    }
+
+    .att-table-row:hover { background: rgba(255,255,255,0.03); }
+
+    .att-table-row.header {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .meal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    .meal-badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .month-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition-fast);
+    }
+
+    .month-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-md">
+        <a href="student-dashboard.html" class="brand">
+          <span class="brand-dot"></span>
+          Silicon FoodCourt
+        </a>
+        <ul class="nav-links" style="margin-left: var(--space-lg);">
+          <li><a href="student-dashboard.html">Dashboard</a></li>
+          <li><a href="student-menu.html">Menu</a></li>
+          <li><a href="student-optout.html">Opt-Outs</a></li>
+          <li><a href="student-bill.html">My Bill</a></li>
+        </ul>
+      </div>
+      <div class="user-profile">
+        <span class="text-muted user-room" style="font-weight: 500;">Room --</span>
+        <div class="avatar" onclick="toggleProfileDropdown(event)" style="cursor:pointer;">--</div>
+        <div class="dropdown-menu" id="profile-dropdown">
+          <a href="#" class="dropdown-item" id="dropdown-name" style="font-weight:600; border-bottom: 1px solid rgba(255,255,255,0.08); pointer-events:none;"></a>
+          <a href="#" class="dropdown-item dropdown-room" style="font-size:0.75rem; pointer-events:none; padding-top:0.25rem; padding-bottom:0.75rem;"></a>
+          <a href="index.html" class="dropdown-item" onclick="doLogout(event)" style="color: #ff6b6b;">&#x2192; Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- Header -->
+    <div class="dash-header reveal delay-1" style="margin-top: var(--space-lg);">
+      <h1 class="font-serif">Attendance History</h1>
+      <p class="text-muted">Track your meal attendance — Breakfast, Lunch &amp; Dinner</p>
+    </div>
+
+    <!-- Summary Stats -->
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); margin: var(--space-md) 0;">
+      <div class="glass-panel reveal delay-1" style="text-align:center; padding: 1.25rem;">
+        <div class="stat-label">Total Present</div>
+        <div class="stat-value text-secondary" id="stat-total-present">--</div>
+      </div>
+      <div class="glass-panel reveal delay-2" style="text-align:center; padding: 1.25rem;">
+        <div class="stat-label">Total Absent</div>
+        <div class="stat-value" style="color: var(--danger);" id="stat-total-absent">--</div>
+      </div>
+      <div class="glass-panel reveal delay-3" style="text-align:center; padding: 1.25rem;">
+        <div class="stat-label">This Month</div>
+        <div class="stat-value text-primary" id="stat-month-meals">--</div>
+      </div>
+      <div class="glass-panel reveal delay-4" style="text-align:center; padding: 1.25rem;">
+        <div class="stat-label">Attendance %</div>
+        <div class="stat-value" id="stat-percentage">-- %</div>
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="glass-panel reveal delay-2" style="margin-bottom: var(--space-md);">
+      <div class="flex justify-between items-center" style="margin-bottom: var(--space-sm);">
+        <h3 class="font-serif">Monthly Calendar</h3>
+        <div class="month-nav">
+          <button class="month-btn" id="prev-month" onclick="changeMonth(-1)">&#8249;</button>
+          <span style="font-weight: 600; min-width: 130px; text-align:center;" id="month-label">April 2026</span>
+          <button class="month-btn" id="next-month" onclick="changeMonth(1)">&#8250;</button>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-box" style="background:rgba(167,201,87,0.25); border:1px solid rgba(167,201,87,0.4);"></div> All Meals Present</div>
+        <div class="legend-item"><div class="legend-box" style="background:rgba(244,140,6,0.18); border:1px solid rgba(244,140,6,0.4);"></div> Partial</div>
+        <div class="legend-item"><div class="legend-box" style="background:rgba(208,0,0,0.12); border:1px solid rgba(208,0,0,0.35);"></div> Absent</div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--bg-surface); border:1px solid var(--border-light);"></div> No Record</div>
+      </div>
+
+      <!-- Day headers -->
+      <div class="att-calendar" id="calendar-grid">
+        <div class="att-day-header">Sun</div>
+        <div class="att-day-header">Mon</div>
+        <div class="att-day-header">Tue</div>
+        <div class="att-day-header">Wed</div>
+        <div class="att-day-header">Thu</div>
+        <div class="att-day-header">Fri</div>
+        <div class="att-day-header">Sat</div>
+        <!-- Days injected by JS -->
+      </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <div class="glass-panel reveal delay-3" style="margin-bottom: var(--space-lg);">
+      <h3 class="font-serif" style="margin-bottom: var(--space-sm);">Detailed Log</h3>
+      <div id="att-log-container">
+        <div class="att-table-row header">
+          <span>Date</span>
+          <span>Breakfast</span>
+          <span>Lunch</span>
+          <span>Dinner</span>
+          <span>Status</span>
+        </div>
+        <div id="att-log-body" style="min-height: 120px;">
+          <p class="text-muted" style="text-align:center; padding: 2rem;">Loading attendance records...</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Attendance page logic
+    let allAttendance = [];
+    let currentYear, currentMonth;
+
+    const now = new Date();
+    currentYear  = now.getFullYear();
+    currentMonth = now.getMonth(); // 0-indexed
+
+    const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function changeMonth(dir) {
+      currentMonth += dir;
+      if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
+      if (currentMonth > 11) { currentMonth = 0;  currentYear++; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('month-label').textContent = MONTH_NAMES[currentMonth] + ' ' + currentYear;
+
+      const grid = document.getElementById('calendar-grid');
+      // Remove old day cells (keep 7 headers)
+      const headers = Array.from(grid.children).slice(0, 7);
+      grid.innerHTML = '';
+      headers.forEach(h => grid.appendChild(h));
+
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      // Empty cells before first day
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'att-day empty';
+        grid.appendChild(empty);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const rec = allAttendance.find(a => (a.attendanceDate || '').startsWith(dateStr));
+
+        const cell = document.createElement('div');
+        cell.className = 'att-day';
+
+        const dayNum = document.createElement('span');
+        dayNum.className = 'day-num';
+        dayNum.textContent = d;
+        cell.appendChild(dayNum);
+
+        if (dateStr === todayStr) cell.classList.add('today');
+
+        if (dateStr > todayStr) {
+          cell.classList.add('future');
+        } else if (rec) {
+          const total  = rec.breakfast + rec.lunch + rec.dinner;
+          if (total === 3) cell.classList.add('all-present');
+          else if (total === 0) cell.classList.add('all-absent');
+          else cell.classList.add('partial');
+
+          const dots = document.createElement('div');
+          dots.className = 'meal-dots';
+          ['breakfast','lunch','dinner'].forEach(m => {
+            const dot = document.createElement('div');
+            dot.className = 'meal-dot ' + (rec[m] ? 'present' : 'absent');
+            dot.title = m.charAt(0).toUpperCase() + m.slice(1) + ': ' + (rec[m] ? 'Present' : 'Absent');
+            dots.appendChild(dot);
+          });
+          cell.appendChild(dots);
+
+          cell.title = `${dateStr}\nBreakfast: ${rec.breakfast ? '✓' : '✗'}  Lunch: ${rec.lunch ? '✓' : '✗'}  Dinner: ${rec.dinner ? '✓' : '✗'}`;
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function renderTable() {
+      const body = document.getElementById('att-log-body');
+      if (!allAttendance || allAttendance.length === 0) {
+        body.innerHTML = '<p class="text-muted" style="text-align:center;padding:2rem;">No attendance records found.</p>';
+        return;
+      }
+
+      // Sort descending
+      const sorted = [...allAttendance].sort((a, b) => b.attendanceDate > a.attendanceDate ? 1 : -1);
+      body.innerHTML = '';
+
+      sorted.forEach(rec => {
+        const total = rec.breakfast + rec.lunch + rec.dinner;
+        const statusText = total === 3 ? 'Full Day' : total === 0 ? 'Absent' : 'Partial';
+        const statusColor = total === 3 ? 'var(--secondary)' : total === 0 ? 'var(--danger)' : 'var(--primary-hover)';
+
+        const mealBadge = (val) => `<span class="meal-badge">
+          <span class="dot" style="background:${val ? 'var(--secondary)' : 'var(--danger)'}"></span>
+          ${val ? 'Present' : 'Absent'}
+        </span>`;
+
+        body.innerHTML += `<div class="att-table-row">
+          <span style="color:var(--text-muted); font-size:0.85rem;">${rec.attendanceDate}</span>
+          ${mealBadge(rec.breakfast)}
+          ${mealBadge(rec.lunch)}
+          ${mealBadge(rec.dinner)}
+          <span style="font-weight:600; color:${statusColor}; font-size:0.85rem;">${statusText}</span>
+        </div>`;
+      });
+    }
+
+    function updateStats() {
+      let totalPresent = 0, totalAbsent = 0;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const monthStr = `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}`;
+      let monthMeals  = 0;
+
+      allAttendance.forEach(rec => {
+        const p = rec.breakfast + rec.lunch + rec.dinner;
+        totalPresent += p;
+        totalAbsent  += (3 - p);
+        if ((rec.attendanceDate || '').startsWith(monthStr)) monthMeals += p;
+      });
+
+      const pct = totalPresent + totalAbsent > 0
+        ? Math.round(totalPresent / (totalPresent + totalAbsent) * 100)
+        : 0;
+
+      document.getElementById('stat-total-present').textContent = totalPresent;
+      document.getElementById('stat-total-absent').textContent  = totalAbsent;
+      document.getElementById('stat-month-meals').textContent   = monthMeals;
+      document.getElementById('stat-percentage').textContent    = pct + ' %';
+    }
+
+    // Load on page ready
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+      if (!user) { window.location.href = 'index.html'; return; }
+
+      fetch(`api/attendance?studentId=${encodeURIComponent(user.studentId)}`)
+        .then(r => r.json())
+        .then(data => {
+          allAttendance = data;
+          renderCalendar();
+          renderTable();
+          updateStats();
+        })
+        .catch(() => {
+          document.getElementById('att-log-body').innerHTML =
+            '<p class="text-muted" style="text-align:center;padding:2rem;">Could not load attendance. Is server running?</p>';
+          renderCalendar();
+        });
+    });
+  </script>
+</body>
+
+</html>
